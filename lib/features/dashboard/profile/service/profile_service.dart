@@ -5,9 +5,11 @@ import '../model/profile_model.dart';
 class ProfileService {
   Future<ProfileResponse> get() async {
     final response = await HttpClient.httpClient.get<Map<String, dynamic>>(
-      '/user',
+      '/profile',
     );
 
-    return ProfileResponse.fromUser(response.data ?? const {});
+    return ProfileResponse.fromJson(
+      Map<String, dynamic>.from(response.data!['data']),
+    );
   }
 }

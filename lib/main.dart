@@ -8,6 +8,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'router/router.dart';
 import 'shared/api/network/http_client.dart';
 import 'shared/ui/themes/app_colors.dart';
+import 'shared/ui/themes/button_themes.dart';
 
 // Services
 import 'features/auth/service/auth_service.dart';
@@ -43,6 +44,26 @@ class MediMayaApp extends StatelessWidget {
     return MaterialApp.router(
       title: 'MediMaya',
       theme: ThemeData(
+        filledButtonTheme: FilledButtonThemeData(style: ButtonThemes.primary()),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ButtonThemes.primary(),
+        ),
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          style: ButtonThemes.secondary(),
+        ),
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
+            minimumSize: const Size(0, 48),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            textStyle: ButtonThemes.textStyle,
+          ),
+        ),
+        iconButtonTheme: IconButtonThemeData(
+          style: IconButton.styleFrom(
+            minimumSize: const Size(48, 48),
+            iconSize: 24,
+          ),
+        ),
         colorScheme: ColorScheme.fromSeed(seedColor: AppColors.colorPrimario),
         dialogTheme: DialogThemeData(
           backgroundColor: AppColors.colorFondo,

@@ -70,7 +70,7 @@ class ProfileController extends ChangeNotifier {
     final data = await StorageClient.readJson<Map<String, dynamic>>(
       StorageKey.profile,
     );
-    if (data == null) return false;
+    if (data == null || data['role'] == null) return false;
     _apply(ProfileResponse.fromJson(data));
     return true;
   }
