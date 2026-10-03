@@ -1,7 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- El manifest de debug ya lo declara, pero release no lo hereda: sin esto
+         la app no puede abrir ni la API ni el login. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:label="medimaya_app"
         android:name="${applicationName}"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

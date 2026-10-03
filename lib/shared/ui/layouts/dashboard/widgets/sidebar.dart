@@ -7,6 +7,7 @@ import 'package:medimaya_app/features/dashboard/profile/store/profile_controller
 import 'package:medimaya_app/shared/config/siderbar_config.dart';
 import 'package:medimaya_app/shared/ui/layouts/dashboard/model/sidebar_model.dart';
 import 'package:medimaya_app/shared/ui/themes/app_colors.dart';
+import 'package:medimaya_app/shared/ui/widget/common/app_badge.dart';
 
 import 'profile_menu.dart';
 
@@ -126,8 +127,14 @@ class Sidebar extends StatelessWidget {
               icon: item.icon,
               title: item.title,
               badge: item.badge,
-              active: item.route != null && _isActive(item.route!),
-              onTap: item.route == null ? null : () => context.go(item.route!),
+              comingSoon: item.comingSoon,
+              active:
+                  !item.comingSoon &&
+                  item.route != null &&
+                  _isActive(item.route!),
+              onTap: item.comingSoon || item.route == null
+                  ? null
+                  : () => context.go(item.route!),
             ),
         ],
       ],
@@ -154,6 +161,7 @@ class Sidebar extends StatelessWidget {
     required String title,
     required bool active,
     int? badge,
+    bool comingSoon = false,
     VoidCallback? onTap,
   }) {
     final iconColor = active
@@ -161,7 +169,7 @@ class Sidebar extends StatelessWidget {
         : AppColors.colorTextoSecundario;
     final textColor = active ? AppColors.colorPrimario : AppColors.colorTexto;
 
-    return Padding(
+    final row = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 1),
       child: Material(
         color: Colors.transparent,
@@ -205,7 +213,9 @@ class Sidebar extends StatelessWidget {
                       fontWeight: active || badge != null
                           ? FontWeight.w700
                           : FontWeight.w500,
-                      color: textColor,
+                      color: comingSoon
+                          ? iconColor.withValues(alpha: 0.6)
+                          : textColor,
                     ),
                   ),
                 ),
@@ -228,11 +238,22 @@ class Sidebar extends StatelessWidget {
                       ),
                     ),
                   ),
+                if (comingSoon)
+                  const AppBadge(
+                    label: 'Pronto',
+                    color: AppColors.colorSuperficieAlta,
+                  ),
               ],
             ),
           ),
         ),
       ),
     );
+
+    if (comingSoon) {
+      return Tooltip(message: '$title todavía no está disponible', child: row);
+    }
+
+    return row;
   }
 }

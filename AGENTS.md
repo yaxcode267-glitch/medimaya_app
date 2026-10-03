@@ -9,6 +9,7 @@ Están en `.agents/skills/<nombre>/SKILL.md`. Aplícalas según la tarea:
 
 | Skill | Cuándo |
 |---|---|
+| `anti-overengineering` | Antes de añadir una capa, un helper, un test o un try/catch; y al limpiar código existente (comentarios, wrappers, abstracciones de una sola implementación). |
 | `diseno-medimaya` | Cualquier cambio de UI: widget, page, formulario, tabla, color, spacing, responsive, estados. |
 | `dart-flutter-patterns` | Patrones Dart/Flutter: null safety, estado, async, widget architecture, GoRouter, Dio. |
 | `flutter-dart-code-review` | Revisar código Dart/Flutter: checklist de idioms, widgets, performance, accesibilidad. |
@@ -27,6 +28,9 @@ Las skills de la comunidad (las que empiezan por `flutter-`, más
 ```bash
 npx skills update
 ```
+
+`anti-overengineering` es un symlink a `~/.agents/skills/anti-overengineering`;
+por eso no se actualiza con `npx skills update`.
 
 ## Arquitectura
 

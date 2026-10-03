@@ -1,10 +1,13 @@
 import 'package:go_router/go_router.dart';
 
+import '../administration/users/users_routes.dart';
+
 // Pages
 import 'home/pages/dashboard_home_page.dart';
 import 'profile/pages/profile_page.dart';
 
 final List<GoRoute> dashboardRoutes = [
+  ...usersRoutes,
   GoRoute(
     path: '/dashboard',
     name: 'Inicio',

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 // Themes
 import '../../themes/app_colors.dart';
+import '../../themes/button_themes.dart';
 
 enum ConfirmTone { warning, danger }
 
@@ -112,13 +113,15 @@ class _ConfirmDialog extends StatelessWidget {
                   ),
                 ],
                 const SizedBox(height: 24),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 12,
+                  runSpacing: 12,
                   children: [
                     OutlinedButton(
                       onPressed: () => Navigator.of(context).pop(false),
                       style: OutlinedButton.styleFrom(
-                        minimumSize: const Size(0, 44),
+                        minimumSize: ButtonThemes.minimumSize,
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         foregroundColor: AppColors.colorTexto,
                         side: const BorderSide(
@@ -128,17 +131,16 @@ class _ConfirmDialog extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         textStyle: const TextStyle(
-                          fontSize: 14,
+                          fontSize: 16,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                       child: Text(cancelText),
                     ),
-                    const SizedBox(width: 10),
                     FilledButton(
                       onPressed: () => Navigator.of(context).pop(true),
                       style: FilledButton.styleFrom(
-                        minimumSize: const Size(0, 44),
+                        minimumSize: ButtonThemes.minimumSize,
                         padding: const EdgeInsets.symmetric(horizontal: 24),
                         backgroundColor: confirmColor,
                         foregroundColor: Colors.white,
@@ -146,7 +148,7 @@ class _ConfirmDialog extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         textStyle: const TextStyle(
-                          fontSize: 14,
+                          fontSize: 16,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
