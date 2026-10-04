@@ -13,7 +13,6 @@ const SidebarMenu sidebarMenu = [
     icon: Icons.privacy_tip,
     route: '/dashboard/roles',
     permission: 'roles:view',
-    comingSoon: true,
   ),
   SidebarSection(
     label: 'Clínico',

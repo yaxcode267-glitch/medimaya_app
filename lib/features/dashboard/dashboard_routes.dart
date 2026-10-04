@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 
+import 'administration/roles/pages/roles_routes.dart';
 import 'administration/users/users_routes.dart';
 
 // Pages
@@ -18,4 +19,5 @@ final List<GoRoute> dashboardRoutes = [
     builder: (context, state) => const ProfilePage(),
   ),
   ...usersRoutes,
+  ...rolesRoutes,
 ];
