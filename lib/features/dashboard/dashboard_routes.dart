@@ -1,13 +1,13 @@
 import 'package:go_router/go_router.dart';
 
-import '../administration/users/users_routes.dart';
+import 'administration/roles/pages/roles_routes.dart';
+import 'administration/users/users_routes.dart';
 
 // Pages
 import 'home/pages/dashboard_home_page.dart';
 import 'profile/pages/profile_page.dart';
 
 final List<GoRoute> dashboardRoutes = [
-  ...usersRoutes,
   GoRoute(
     path: '/dashboard',
     name: 'Inicio',
@@ -18,4 +18,6 @@ final List<GoRoute> dashboardRoutes = [
     name: 'Perfil',
     builder: (context, state) => const ProfilePage(),
   ),
+  ...usersRoutes,
+  ...rolesRoutes,
 ];
