@@ -46,9 +46,8 @@ const SidebarMenu sidebarMenu = [
       SidebarItem(
         title: 'Categorías',
         icon: Icons.category_outlined,
-        route: '/pos/inventory/categories',
+        route: '/dashboard/pos/inventory/categories',
         permission: 'product-categories:view',
-        comingSoon: true,
       ),
       SidebarItem(
         title: 'Productos',
