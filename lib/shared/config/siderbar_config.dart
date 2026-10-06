@@ -52,9 +52,8 @@ const SidebarMenu sidebarMenu = [
       SidebarItem(
         title: 'Productos',
         icon: Icons.inventory_2_outlined,
-        route: '/pos/inventory/products',
+        route: '/dashboard/pos/inventory/products',
         permission: 'products:view',
-        comingSoon: true,
       ),
     ],
   ),

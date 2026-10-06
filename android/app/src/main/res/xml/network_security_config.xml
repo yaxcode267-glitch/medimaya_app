@@ -10,6 +10,9 @@
         <domain includeSubdomains="false">localhost</domain>
         <!-- 10.0.2.2 es el alias del host de la máquina desde el emulador. -->
         <domain includeSubdomains="false">10.0.2.2</domain>
+        <!-- MinIO en la red local: de ahí llegan las URLs firmadas de las
+             imágenes, con el mismo esquema HTTP plano que el backend. -->
+        <domain includeSubdomains="false">192.168.1.8</domain>
     </domain-config>
 
     <base-config cleartextTrafficPermitted="false">
