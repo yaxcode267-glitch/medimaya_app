@@ -18,25 +18,40 @@ const SidebarMenu sidebarMenu = [
     label: 'Clínico',
     items: [
       SidebarItem(
+        title: 'Pacientes',
+        icon: Icons.people_outline,
+        route: '/dashboard/patients',
+        permission: 'patients:view',
+      ),
+      SidebarItem(
+        title: 'Consultas',
+        icon: Icons.event_note_outlined,
+        route: '/dashboard/consultations',
+        permission: 'consultations:view',
+      ),
+      SidebarItem(
+        title: 'Tipos de documento',
+        icon: Icons.folder_outlined,
+        route: '/dashboard/document-types',
+        permission: 'document-types:view',
+      ),
+      SidebarItem(
         title: 'Formularios de consulta',
         icon: Icons.assignment_outlined,
         route: '/dashboard/consultation-forms',
         permission: 'consultation-forms:view',
-        comingSoon: true,
       ),
       SidebarItem(
         title: 'Campos de consulta',
         icon: Icons.list_alt_outlined,
         route: '/dashboard/consultation-fields',
         permission: 'consultation-fields:view',
-        comingSoon: true,
       ),
       SidebarItem(
         title: 'Especialidades',
         icon: Icons.medical_services_outlined,
         route: '/dashboard/specialties',
         permission: 'specialties:view',
-        comingSoon: true,
       ),
     ],
   ),
