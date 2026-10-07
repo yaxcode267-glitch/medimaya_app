@@ -9,7 +9,6 @@ import 'clinical_notice.dart';
 import 'clinical_preview.dart';
 
 import 'package:medimaya_app/shared/ui/themes/button_themes.dart';
-import 'package:medimaya_app/shared/ui/widget/common/app_card.dart';
 import 'package:medimaya_app/shared/ui/widget/common/app_empty_state.dart';
 
 class ClinicalRecordContent extends StatelessWidget {
@@ -29,12 +28,7 @@ class ClinicalRecordContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final index = id == null
-        ? -1
-        : List.generate(
-            section.examples.length,
-            (i) => 'demo-${i + 1}',
-          ).indexOf(id!);
+    final index = id == null ? -1 : section.indexOfId(id!);
     return id != null && index < 0
         ? const Center(child: AppEmptyState(message: 'Este ejemplo no existe.'))
         : ListView(
@@ -50,19 +44,17 @@ class ClinicalRecordContent extends StatelessWidget {
                     : 'Completa los datos. Los campos con * son obligatorios.',
               ),
               const SizedBox(height: 20),
-              AppCard(
-                child: readOnly
-                    ? ClinicalRecordSummary(
-                        section: section,
-                        values: section.examples[index],
-                      )
-                    : ClinicalFields(
-                        fields: section.fields,
-                        fieldBuilder: fieldBuilder,
-                        values: index < 0 ? const {} : section.examples[index],
-                        readOnly: readOnly,
-                      ),
-              ),
+              readOnly
+                  ? ClinicalRecordSummary(
+                      section: section,
+                      values: section.examples[index],
+                    )
+                  : ClinicalFields(
+                      fields: section.fields,
+                      fieldBuilder: fieldBuilder,
+                      values: index < 0 ? const {} : section.examples[index],
+                      readOnly: readOnly,
+                    ),
               const SizedBox(height: 24),
               structure ??
                   ClinicalPreview(slug: section.slug, readOnly: readOnly),

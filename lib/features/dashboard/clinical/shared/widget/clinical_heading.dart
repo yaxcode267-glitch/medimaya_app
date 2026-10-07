@@ -1,3 +1,4 @@
+import 'package:medimaya_app/shared/ui/themes/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:medimaya_app/shared/ui/themes/app_colors.dart';
 
@@ -30,14 +31,7 @@ class ClinicalHeading extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          Text(
-            description,
-            style: const TextStyle(
-              fontSize: 15,
-              height: 1.5,
-              color: AppColors.colorTextoSecundario,
-            ),
-          ),
+          Text(description, style: AppTextStyles.description),
         ],
       );
       if (action == null) return heading;

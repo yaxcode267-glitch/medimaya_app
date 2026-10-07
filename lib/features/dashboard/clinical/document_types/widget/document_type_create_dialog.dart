@@ -1,3 +1,4 @@
+import 'package:medimaya_app/shared/ui/themes/app_text_styles.dart';
 import 'package:flutter/material.dart';
 
 import 'extension_groups_field.dart';
@@ -31,11 +32,7 @@ class _DocumentTypeCreateDialogState extends State<DocumentTypeCreateDialog> {
   @override
   Widget build(BuildContext context) => AlertDialog(
     insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-    contentTextStyle: const TextStyle(
-      fontSize: 15,
-      height: 1.5,
-      color: AppColors.colorTexto,
-    ),
+    contentTextStyle: AppTextStyles.dialog,
     title: const Text('Crear tipo de documento'),
     content: SizedBox(
       width: 560,

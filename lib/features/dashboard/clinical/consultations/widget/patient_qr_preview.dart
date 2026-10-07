@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:medimaya_app/shared/ui/themes/app_colors.dart';
 import 'package:medimaya_app/shared/ui/themes/button_themes.dart';
-import 'package:medimaya_app/shared/ui/widget/common/app_card.dart';
 
 class PatientQrPreview extends StatelessWidget {
   const PatientQrPreview({super.key});
@@ -13,13 +12,11 @@ class PatientQrPreview extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const AppCard(
-            child: Center(
-              child: Icon(
-                Icons.qr_code_scanner,
-                size: 96,
-                color: AppColors.colorPrimario,
-              ),
+          const Center(
+            child: Icon(
+              Icons.qr_code_scanner,
+              size: 96,
+              color: AppColors.colorPrimario,
             ),
           ),
           const SizedBox(height: 16),

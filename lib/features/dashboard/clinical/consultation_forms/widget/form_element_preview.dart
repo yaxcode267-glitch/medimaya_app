@@ -4,7 +4,6 @@ import '../model/form_builder_models.dart';
 import 'field_choice_preview.dart';
 import '../../document_types/model/document_types_section.dart';
 
-import 'package:medimaya_app/shared/ui/widget/common/app_card.dart';
 import 'package:medimaya_app/shared/ui/widget/forms/input_form.dart';
 import 'package:medimaya_app/shared/ui/widget/forms/select_form.dart';
 import 'package:medimaya_app/shared/ui/widget/forms/select_option.dart';
@@ -22,31 +21,27 @@ class FormElementPreview extends StatelessWidget {
     }
     final options = (config['options'] as List?)?.cast<String>() ?? [];
     if (field.fieldType == 'document') {
-      final index = List.generate(
-        documentTypesSection.examples.length,
-        (i) => 'demo-${i + 1}',
-      ).indexOf(element.documentTypeId ?? '');
+      final index = documentTypesSection.indexOfId(
+        element.documentTypeId ?? '',
+      );
       final document =
           element.documentType ??
           (index < 0 ? null : documentTypesSection.examples[index]);
-      return AppCard(
-        icon: Icons.upload_file_outlined,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('${field.label}${element.isRequired ? ' *' : ''}'),
-            const SizedBox(height: 8),
-            Text(
-              document == null
-                  ? 'Selecciona un tipo de documento en la configuración.'
-                  : '${document['Nombre']} · ${document['Tamaño máximo (MB)']} MB por archivo',
-            ),
-            if (document != null)
-              Text('Formatos: ${document['Extensiones permitidas']}'),
-            const SizedBox(height: 8),
-            const Text('Vista previa · Carga de archivos no disponible.'),
-          ],
-        ),
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('${field.label}${element.isRequired ? ' *' : ''}'),
+          const SizedBox(height: 8),
+          Text(
+            document == null
+                ? 'Selecciona un tipo de documento en la configuración.'
+                : '${document['Nombre']} · ${document['Tamaño máximo (MB)']} MB por archivo',
+          ),
+          if (document != null)
+            Text('Formatos: ${document['Extensiones permitidas']}'),
+          const SizedBox(height: 8),
+          const Text('Vista previa · Carga de archivos no disponible.'),
+        ],
       );
     }
     if (field.fieldType == 'checkbox' || field.fieldType == 'radio') {

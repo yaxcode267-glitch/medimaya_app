@@ -17,6 +17,9 @@ class ClinicalSection {
   final String description;
   final List<ClinicalField> fields;
   final List<Map<String, String>> examples;
+  int indexOfId(String id) =>
+      List.generate(examples.length, (i) => 'demo-${i + 1}').indexOf(id);
+
   String get path => '/dashboard/$slug';
 }
 

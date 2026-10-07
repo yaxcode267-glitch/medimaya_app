@@ -1,3 +1,4 @@
+import 'package:medimaya_app/shared/ui/themes/app_text_styles.dart';
 import 'package:flutter/material.dart';
 
 import '../model/form_builder_models.dart';
@@ -158,14 +159,7 @@ class _ConsultationFormBuilderState extends State<ConsultationFormBuilder> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          'Estructura del formulario',
-          style: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w700,
-            color: AppColors.colorTexto,
-          ),
-        ),
+        Text('Estructura del formulario', style: AppTextStyles.title),
         const SizedBox(height: 8),
         Text(
           '${_elements.where((item) => item.type == 'FIELD').length} campos · '

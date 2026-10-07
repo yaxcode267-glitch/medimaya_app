@@ -1,5 +1,8 @@
+import 'package:medimaya_app/shared/ui/themes/app_text_styles.dart';
+
+import '../../shared/store/field_config_controller.dart';
+
 import 'package:flutter/material.dart';
-import 'package:medimaya_app/shared/ui/themes/app_colors.dart';
 
 import '../model/form_builder_models.dart';
 import 'field_config_inputs.dart';
@@ -36,11 +39,7 @@ class FormFieldEditor extends StatefulWidget {
 class _FormFieldEditorState extends State<FormFieldEditor> {
   final _form = GlobalKey<FormState>();
   final _label = TextEditingController();
-  final _placeholder = TextEditingController();
-  final _unit = TextEditingController();
-  final _minimum = TextEditingController();
-  final _maximum = TextEditingController();
-  final _options = TextEditingController();
+  final _config = FieldConfigController();
   bool _create = false;
   bool _defaultRequired = false;
   String _type = 'text', _required = 'inherit', _parent = '';
@@ -74,45 +73,20 @@ class _FormFieldEditorState extends State<FormFieldEditor> {
     _type = field.fieldType;
     _label.text = field.label;
     _defaultRequired = field.required;
-    _placeholder.text = config['placeholder']?.toString() ?? '';
-    _unit.text = config['unit']?.toString() ?? '';
-    _minimum.text = config['min']?.toString() ?? '';
-    _maximum.text = config['max']?.toString() ?? '';
-    _options.text = (config['options'] as List?)?.join('\n') ?? '';
+    _config.load(config);
   }
 
   @override
   void dispose() {
-    for (final controller in [
-      _label,
-      _placeholder,
-      _unit,
-      _minimum,
-      _maximum,
-      _options,
-    ]) {
-      controller.dispose();
-    }
+    _label.dispose();
+    _config.dispose();
     super.dispose();
   }
 
   void _apply() {
     if (!_form.currentState!.validate()) return;
-    final config = <String, Object?>{
-      if (_type != 'document') 'placeholder': _placeholder.text.trim(),
-      if (_type == 'number') ...{
-        'unit': _unit.text.trim(),
-        'min': num.tryParse(_minimum.text),
-        'max': num.tryParse(_maximum.text),
-      },
-      if (_type == 'select' || _type == 'radio')
-        'options': _options.text
-            .split('\n')
-            .map((value) => value.trim())
-            .where((value) => value.isNotEmpty)
-            .toSet()
-            .toList(),
-    };
+    _config.type = _type;
+    final config = _config.toConfig();
     final field = _create
         ? ConsultationFieldDefinition(
             id: widget.element?.field?.id ?? 'field-${widget.nextId}',
@@ -142,11 +116,7 @@ class _FormFieldEditorState extends State<FormFieldEditor> {
   @override
   Widget build(BuildContext context) => AlertDialog(
     insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-    contentTextStyle: const TextStyle(
-      fontSize: 15,
-      height: 1.5,
-      color: AppColors.colorTexto,
-    ),
+    contentTextStyle: AppTextStyles.dialog,
     title: Text(
       widget.documentOnly
           ? (widget.element == null
@@ -251,11 +221,11 @@ class _FormFieldEditorState extends State<FormFieldEditor> {
                 const SizedBox(height: 16),
                 FieldConfigInputs(
                   type: _type,
-                  placeholder: _placeholder,
-                  unit: _unit,
-                  minimum: _minimum,
-                  maximum: _maximum,
-                  options: _options,
+                  placeholder: _config.placeholder,
+                  unit: _config.unit,
+                  minimum: _config.minimum,
+                  maximum: _config.maximum,
+                  options: _config.options,
                   documentTypeId: _documentTypeId,
                   documentTypes: widget.documentTypes,
                   selectedDocument: _documentType,

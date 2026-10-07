@@ -1,3 +1,4 @@
+import 'package:medimaya_app/shared/ui/themes/app_text_styles.dart';
 import 'package:flutter/material.dart';
 
 import '../model/clinical_section.dart';
@@ -30,15 +31,7 @@ class ClinicalRecordSummary extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    field.label,
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.colorTextoSecundario,
-                      height: 1.4,
-                    ),
-                  ),
+                  Text(field.label, style: AppTextStyles.label),
                   const SizedBox(height: 8),
                   if (field.label == 'Disponibilidad')
                     AppBadge(
@@ -52,12 +45,9 @@ class ClinicalRecordSummary extends StatelessWidget {
                       (values[field.label]?.isNotEmpty ?? false)
                           ? values[field.label]!
                           : 'No registrado',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        height: 1.5,
-                        color: AppColors.colorTexto,
-                      ),
+                      style: AppTextStyles.body,
                     ),
+                  const Divider(height: 24),
                 ],
               ),
             ),

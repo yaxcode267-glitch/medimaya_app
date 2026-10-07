@@ -13,10 +13,7 @@ class ConsultationFieldFormPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final index = List.generate(
-      consultationFieldsSection.examples.length,
-      (i) => 'demo-${i + 1}',
-    ).indexOf(id ?? '');
+    final index = consultationFieldsSection.indexOfId(id ?? '');
     return DashboardLayout(
       title: '${id == null ? 'Crear' : 'Editar'} campo de consulta',
       child: id != null && index < 0

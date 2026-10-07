@@ -1,3 +1,5 @@
+import '../../shared/store/field_config_controller.dart';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -8,7 +10,6 @@ import '../../consultation_forms/widget/form_element_preview.dart';
 import '../../shared/widget/clinical_notice.dart';
 
 import 'package:medimaya_app/shared/ui/themes/button_themes.dart';
-import 'package:medimaya_app/shared/ui/widget/common/app_card.dart';
 import 'package:medimaya_app/shared/ui/widget/forms/input_form.dart';
 import 'package:medimaya_app/shared/ui/widget/forms/select_form.dart';
 import 'package:medimaya_app/shared/ui/widget/forms/select_option.dart';
@@ -30,11 +31,7 @@ class ConsultationFieldEditor extends StatefulWidget {
 class _ConsultationFieldEditorState extends State<ConsultationFieldEditor> {
   final _form = GlobalKey<FormState>();
   final _label = TextEditingController();
-  final _placeholder = TextEditingController();
-  final _unit = TextEditingController();
-  final _minimum = TextEditingController();
-  final _maximum = TextEditingController();
-  final _options = TextEditingController();
+  final _config = FieldConfigController();
   String _type = 'text', _active = 'Activo', _required = 'No';
   ConsultationFormElement? _preview;
 
@@ -50,18 +47,14 @@ class _ConsultationFieldEditorState extends State<ConsultationFieldEditor> {
         'text';
     _active = widget.example['Disponibilidad'] ?? 'Activo';
     _required = widget.example['Obligatorio'] ?? 'No';
-    _placeholder.text = widget.config['placeholder']?.toString() ?? '';
-    _unit.text = widget.config['unit']?.toString() ?? '';
-    _minimum.text = widget.config['min']?.toString() ?? '';
-    _maximum.text = widget.config['max']?.toString() ?? '';
-    _options.text = (widget.config['options'] as List?)?.join('\n') ?? '';
+    _config.load(widget.config);
     for (final controller in [
       _label,
-      _placeholder,
-      _unit,
-      _minimum,
-      _maximum,
-      _options,
+      _config.placeholder,
+      _config.unit,
+      _config.minimum,
+      _config.maximum,
+      _config.options,
     ]) {
       controller.addListener(_invalidatePreview);
     }
@@ -73,36 +66,15 @@ class _ConsultationFieldEditorState extends State<ConsultationFieldEditor> {
 
   @override
   void dispose() {
-    for (final controller in [
-      _label,
-      _placeholder,
-      _unit,
-      _minimum,
-      _maximum,
-      _options,
-    ]) {
-      controller.dispose();
-    }
+    _label.dispose();
+    _config.dispose();
     super.dispose();
   }
 
   void _showPreview() {
     if (!_form.currentState!.validate()) return;
-    final config = <String, Object?>{
-      'placeholder': _placeholder.text.trim(),
-      if (_type == 'number') ...{
-        'unit': _unit.text.trim(),
-        'min': num.tryParse(_minimum.text),
-        'max': num.tryParse(_maximum.text),
-      },
-      if (_type == 'select' || _type == 'radio')
-        'options': _options.text
-            .split('\n')
-            .map((value) => value.trim())
-            .where((value) => value.isNotEmpty)
-            .toSet()
-            .toList(),
-    };
+    _config.type = _type;
+    final config = _config.toConfig();
     setState(
       () => _preview = ConsultationFormElement(
         id: 'preview',
@@ -125,91 +97,87 @@ class _ConsultationFieldEditorState extends State<ConsultationFieldEditor> {
       children: [
         const ClinicalNotice(),
         const SizedBox(height: 24),
-        AppCard(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Datos del campo',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              const SizedBox(height: 16),
-              AppInput(
-                name: 'Etiqueta',
-                controller: _label,
-                required: true,
-                validator: (value) => (value?.trim().length ?? 0) > 200
-                    ? 'Máximo 200 caracteres.'
-                    : null,
-              ),
-              const SizedBox(height: 16),
-              AppSelect(
-                name: 'Tipo',
-                value: _type,
-                options: [
-                  for (final entry in consultationFieldTypes.entries.where(
-                    (entry) => entry.key != 'document',
-                  ))
-                    SelectOption(value: entry.key, label: entry.value),
-                ],
-                onChanged: (value) => setState(() {
-                  _type = value;
-                  _preview = null;
-                }),
-              ),
-              const SizedBox(height: 16),
-              AppSelect(
-                name: 'Obligatorio',
-                value: _required,
-                options: const [
-                  SelectOption(value: 'Sí', label: 'Sí'),
-                  SelectOption(value: 'No', label: 'No'),
-                ],
-                onChanged: (value) => setState(() {
-                  _required = value;
-                  _preview = null;
-                }),
-              ),
-              const SizedBox(height: 16),
-              AppSelect(
-                name: 'Disponibilidad',
-                value: _active,
-                options: const [
-                  SelectOption(value: 'Activo', label: 'Activo'),
-                  SelectOption(value: 'Inactivo', label: 'Inactivo'),
-                ],
-                onChanged: (value) => setState(() {
-                  _active = value;
-                  _preview = null;
-                }),
-              ),
-            ],
-          ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Datos del campo',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            const SizedBox(height: 16),
+            AppInput(
+              name: 'Etiqueta',
+              controller: _label,
+              required: true,
+              validator: (value) => (value?.trim().length ?? 0) > 200
+                  ? 'Máximo 200 caracteres.'
+                  : null,
+            ),
+            const SizedBox(height: 16),
+            AppSelect(
+              name: 'Tipo',
+              value: _type,
+              options: [
+                for (final entry in consultationFieldTypes.entries.where(
+                  (entry) => entry.key != 'document',
+                ))
+                  SelectOption(value: entry.key, label: entry.value),
+              ],
+              onChanged: (value) => setState(() {
+                _type = value;
+                _preview = null;
+              }),
+            ),
+            const SizedBox(height: 16),
+            AppSelect(
+              name: 'Obligatorio',
+              value: _required,
+              options: const [
+                SelectOption(value: 'Sí', label: 'Sí'),
+                SelectOption(value: 'No', label: 'No'),
+              ],
+              onChanged: (value) => setState(() {
+                _required = value;
+                _preview = null;
+              }),
+            ),
+            const SizedBox(height: 16),
+            AppSelect(
+              name: 'Disponibilidad',
+              value: _active,
+              options: const [
+                SelectOption(value: 'Activo', label: 'Activo'),
+                SelectOption(value: 'Inactivo', label: 'Inactivo'),
+              ],
+              onChanged: (value) => setState(() {
+                _active = value;
+                _preview = null;
+              }),
+            ),
+          ],
         ),
         const SizedBox(height: 24),
-        AppCard(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Configuración',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                'Valores predeterminados del campo. Cada formulario puede personalizarlos.',
-              ),
-              const SizedBox(height: 16),
-              FieldConfigInputs(
-                type: _type,
-                placeholder: _placeholder,
-                unit: _unit,
-                minimum: _minimum,
-                maximum: _maximum,
-                options: _options,
-              ),
-            ],
-          ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Configuración',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Valores predeterminados del campo. Cada formulario puede personalizarlos.',
+            ),
+            const SizedBox(height: 16),
+            FieldConfigInputs(
+              type: _type,
+              placeholder: _config.placeholder,
+              unit: _config.unit,
+              minimum: _config.minimum,
+              maximum: _config.maximum,
+              options: _config.options,
+            ),
+          ],
         ),
         const SizedBox(height: 24),
         Wrap(
@@ -231,18 +199,16 @@ class _ConsultationFieldEditorState extends State<ConsultationFieldEditor> {
         ),
         if (_preview case final element?) ...[
           const SizedBox(height: 24),
-          AppCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Vista previa del campo',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                const SizedBox(height: 16),
-                FormElementPreview(key: ObjectKey(element), element: element),
-              ],
-            ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Vista previa del campo',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              const SizedBox(height: 16),
+              FormElementPreview(key: ObjectKey(element), element: element),
+            ],
           ),
         ],
         const SizedBox(height: 24),

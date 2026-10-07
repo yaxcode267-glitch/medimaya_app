@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 
 import '../../themes/app_colors.dart';
 
-/// Superficie base de contenido (formularios, cabeceras, detalle).
+enum AppCardVariant { elevated, outlined, flat }
+
+/// Entidad independiente: outlined delimita, elevated destaca y flat integra
+/// la entidad en su superficie sin borde ni elevación. No anidar cards.
 class AppCard extends StatelessWidget {
   final Widget child;
+  final AppCardVariant variant;
   final EdgeInsets padding;
   final Color color;
   final Color borderColor;
@@ -18,6 +22,7 @@ class AppCard extends StatelessWidget {
   const AppCard({
     super.key,
     required this.child,
+    this.variant = AppCardVariant.outlined,
     this.padding = const EdgeInsets.all(20),
     this.color = AppColors.colorFondo,
     this.borderColor = AppColors.colorOutlineVariant,
@@ -32,10 +37,13 @@ class AppCard extends StatelessWidget {
       width: double.infinity,
       child: Material(
         color: color,
+        elevation: variant == AppCardVariant.elevated ? 2 : 0,
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
-          side: BorderSide(color: borderColor),
+          side: variant == AppCardVariant.outlined
+              ? BorderSide(color: borderColor)
+              : BorderSide.none,
         ),
         child: Padding(
           padding: padding,
