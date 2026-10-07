@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 
+// Themes
 import '../../themes/app_colors.dart';
+
+// Widget
 import 'input_form.dart';
 import 'select_option.dart';
 
 /// Desplegable con la misma pinta que [AppInput].
-class AppSelect extends StatelessWidget {
+class AppSelect extends StatefulWidget {
   final String name;
   final List<SelectOption> options;
   final String value;
@@ -36,14 +39,41 @@ class AppSelect extends StatelessWidget {
   });
 
   @override
+  State<AppSelect> createState() => _AppSelectState();
+}
+
+class _AppSelectState extends State<AppSelect> {
+  bool _synchronizing = false;
+  final _field = GlobalKey<FormFieldState<String>>();
+  String? get _value =>
+      widget.options.any((option) => option.value == widget.value)
+      ? widget.value
+      : null;
+
+  @override
+  void didUpdateWidget(AppSelect oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final current = _field.currentState?.value;
+    if (oldWidget.value != widget.value ||
+        (current != null &&
+            !widget.options.any((option) => option.value == current))) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted || _field.currentState?.value == _value) return;
+        _synchronizing = true;
+        _field.currentState?.didChange(_value);
+        _synchronizing = false;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField<String>(
-      initialValue: options.any((option) => option.value == value)
-          ? value
-          : null,
+      key: _field,
+      initialValue: _value,
       isExpanded: true,
       items: [
-        for (final option in options)
+        for (final option in widget.options)
           DropdownMenuItem(
             value: option.value,
             child: Text(
@@ -53,20 +83,24 @@ class AppSelect extends StatelessWidget {
             ),
           ),
       ],
-      onChanged: enabled ? (v) => onChanged(v ?? '') : null,
+      onChanged: widget.enabled
+          ? (v) {
+              if (!_synchronizing) widget.onChanged(v ?? '');
+            }
+          : null,
       style: const TextStyle(fontSize: 16, color: AppColors.colorTexto),
       decoration:
           appFieldDecoration(
-            labelText: required ? '$name *' : name,
-            hintText: hint,
-            errorText: errorText,
+            labelText: widget.required ? '${widget.name} *' : widget.name,
+            hintText: widget.hint,
+            errorText: widget.errorText,
           ).copyWith(
-            helperText: helperText,
+            helperText: widget.helperText,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 18,
               vertical: 20,
             ),
-            enabledBorder: enabled
+            enabledBorder: widget.enabled
                 ? OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: const BorderSide(
@@ -75,12 +109,12 @@ class AppSelect extends StatelessWidget {
                   )
                 : null,
           ),
-      hint: emptyText == null
+      hint: widget.emptyText == null
           ? null
           : Padding(
               padding: const EdgeInsets.symmetric(vertical: 4),
               child: Text(
-                emptyText!,
+                widget.emptyText!,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
@@ -90,11 +124,11 @@ class AppSelect extends StatelessWidget {
               ),
             ),
       validator: (current) {
-        if (required && (current == null || current.isEmpty)) {
-          return '$name es requerido';
+        if (widget.required && (current == null || current.isEmpty)) {
+          return '${widget.name} es requerido';
         }
 
-        return validator?.call(current);
+        return widget.validator?.call(current);
       },
     );
   }
