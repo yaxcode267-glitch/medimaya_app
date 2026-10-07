@@ -1,3 +1,5 @@
+import '../../shared/widget/clinical_data_view.dart';
+
 import 'package:flutter/material.dart';
 
 import '../model/document_types_section.dart';
@@ -11,14 +13,22 @@ class DocumentTypeFormPage extends StatelessWidget {
   final String? id;
 
   @override
-  Widget build(BuildContext context) => DashboardLayout(
+  Widget build(BuildContext context) =>
+      ClinicalDataView(sections: [documentTypesSection], builder: _buildLoaded);
+
+  Widget _buildLoaded(BuildContext context) => DashboardLayout(
     title:
         "${id == null ? 'Crear' : 'Editar'} ${documentTypesSection.singular}",
     child: ClinicalRecordContent(
       section: documentTypesSection,
       id: id,
-      fieldBuilder: (field, value) => field.label == 'Extensiones permitidas'
-          ? ExtensionGroupsField(initialValue: value)
+      fieldBuilder: (field, value, notifier) =>
+          field.key == 'allowed_extensions'
+          ? ExtensionGroupsField(
+              initialValue: value,
+              onChanged: (values) =>
+                  notifier.setValue(field.key, values.join(', ')),
+            )
           : null,
     ),
   );

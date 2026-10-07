@@ -2,15 +2,19 @@ import 'package:flutter/material.dart';
 
 import '../model/form_builder_models.dart';
 import 'field_choice_preview.dart';
-import '../../document_types/model/document_types_section.dart';
 
 import 'package:medimaya_app/shared/ui/widget/forms/input_form.dart';
 import 'package:medimaya_app/shared/ui/widget/forms/select_form.dart';
 import 'package:medimaya_app/shared/ui/widget/forms/select_option.dart';
 
 class FormElementPreview extends StatelessWidget {
-  const FormElementPreview({super.key, required this.element});
+  const FormElementPreview({
+    super.key,
+    required this.element,
+    this.documentTypes = const {},
+  });
   final ConsultationFormElement element;
+  final Map<String, Map<String, String>> documentTypes;
 
   @override
   Widget build(BuildContext context) {
@@ -21,12 +25,8 @@ class FormElementPreview extends StatelessWidget {
     }
     final options = (config['options'] as List?)?.cast<String>() ?? [];
     if (field.fieldType == 'document') {
-      final index = documentTypesSection.indexOfId(
-        element.documentTypeId ?? '',
-      );
       final document =
-          element.documentType ??
-          (index < 0 ? null : documentTypesSection.examples[index]);
+          element.documentType ?? documentTypes[element.documentTypeId];
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -35,10 +35,10 @@ class FormElementPreview extends StatelessWidget {
           Text(
             document == null
                 ? 'Selecciona un tipo de documento en la configuración.'
-                : '${document['Nombre']} · ${document['Tamaño máximo (MB)']} MB por archivo',
+                : '${document['name']} · ${document['max_size_mb']} MB por archivo',
           ),
           if (document != null)
-            Text('Formatos: ${document['Extensiones permitidas']}'),
+            Text('Formatos: ${document['allowed_extensions']}'),
           const SizedBox(height: 8),
           const Text('Vista previa · Carga de archivos no disponible.'),
         ],

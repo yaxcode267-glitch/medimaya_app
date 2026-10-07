@@ -33,17 +33,17 @@ class ClinicalRecordSummary extends StatelessWidget {
                 children: [
                   Text(field.label, style: AppTextStyles.label),
                   const SizedBox(height: 8),
-                  if (field.label == 'Disponibilidad')
+                  if (field.key == 'active')
                     AppBadge(
-                      label: values[field.label] ?? 'Sin definir',
-                      color: values[field.label] == 'Activo'
+                      label: values[field.key] ?? 'Sin definir',
+                      color: values[field.key] == 'Activo'
                           ? AppColors.exito
                           : AppColors.colorOutlineVariant,
                     )
                   else
                     SelectableText(
-                      (values[field.label]?.isNotEmpty ?? false)
-                          ? values[field.label]!
+                      (values[field.key]?.isNotEmpty ?? false)
+                          ? values[field.key]!
                           : 'No registrado',
                       style: AppTextStyles.body,
                     ),

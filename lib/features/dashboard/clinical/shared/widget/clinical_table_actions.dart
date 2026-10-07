@@ -32,7 +32,7 @@ class ClinicalTableActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final path = '${section.path}/demo-${index + 1}';
+    final path = '${section.path}/${section.records[index].id}';
     final canToggle =
         hasPermission('${section.slug}:activate') ||
         (['patients', 'consultations'].contains(section.slug) &&

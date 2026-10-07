@@ -1,3 +1,5 @@
+import '../../shared/widget/clinical_data_view.dart';
+
 import 'package:flutter/material.dart';
 
 import '../model/patients_section.dart';
@@ -11,12 +13,15 @@ class PatientFormPage extends StatelessWidget {
   final String id;
 
   @override
-  Widget build(BuildContext context) => DashboardLayout(
+  Widget build(BuildContext context) =>
+      ClinicalDataView(sections: [patientsSection], builder: _buildLoaded);
+
+  Widget _buildLoaded(BuildContext context) => DashboardLayout(
     title: "Editar ${patientsSection.singular}",
     child: ClinicalRecordContent(
       section: patientsSection,
       id: id,
-      fieldBuilder: (field, value) => field.label == 'ID'
+      fieldBuilder: (field, value, notifier) => field.key == 'patient_code'
           ? AppInput(name: 'ID', initialValue: value, readOnly: true)
           : null,
     ),

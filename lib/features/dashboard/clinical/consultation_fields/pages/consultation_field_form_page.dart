@@ -1,3 +1,5 @@
+import '../../shared/widget/clinical_data_view.dart';
+
 import 'package:flutter/material.dart';
 
 import '../model/consultation_fields_section.dart';
@@ -12,7 +14,12 @@ class ConsultationFieldFormPage extends StatelessWidget {
   final String? id;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => ClinicalDataView(
+    sections: [consultationFieldsSection],
+    builder: _buildLoaded,
+  );
+
+  Widget _buildLoaded(BuildContext context) {
     final index = consultationFieldsSection.indexOfId(id ?? '');
     return DashboardLayout(
       title: '${id == null ? 'Crear' : 'Editar'} campo de consulta',
@@ -24,8 +31,14 @@ class ConsultationFieldFormPage extends StatelessWidget {
               key: ValueKey(id),
               example: index < 0
                   ? const {}
-                  : consultationFieldsSection.examples[index],
-              config: consultationFieldExampleConfigs[id] ?? const {},
+                  : consultationFieldsSection.rows[index],
+              config:
+                  consultationFieldsSection.records
+                          .where((record) => record.id == id)
+                          .firstOrNull
+                          ?.toJson()['config']
+                      as Map<String, Object?>? ??
+                  const {},
             ),
     );
   }

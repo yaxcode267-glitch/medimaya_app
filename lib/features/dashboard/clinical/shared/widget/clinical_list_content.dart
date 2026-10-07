@@ -34,8 +34,7 @@ class _ClinicalListContentState extends State<ClinicalListContent> {
   String _category = '';
 
   bool _isActive(int index) =>
-      _activeChanges[index] ??
-      widget.section.examples[index]['Disponibilidad'] == 'Activo';
+      _activeChanges[index] ?? widget.section.rows[index]['active'] == 'Activo';
 
   @override
   void dispose() {
@@ -50,9 +49,9 @@ class _ClinicalListContentState extends State<ClinicalListContent> {
     final categories = filterField == null
         ? <String>[]
         : section.fields
-              .firstWhere((field) => field.label == filterField)
+              .firstWhere((field) => field.key == filterField)
               .options;
-    final matches = section.examples.asMap().entries.where((entry) {
+    final matches = section.rows.asMap().entries.where((entry) {
       final matchesState =
           _filter == 'all' || (_filter == 'active') == _isActive(entry.key);
       final matchesCategory =
@@ -60,7 +59,7 @@ class _ClinicalListContentState extends State<ClinicalListContent> {
       return matchesState &&
           matchesCategory &&
           entry.value.entries
-              .where((field) => field.key != 'Disponibilidad')
+              .where((field) => field.key != 'active')
               .any((field) => field.value.toLowerCase().contains(_search));
     }).toList();
     return LayoutBuilder(
@@ -85,14 +84,16 @@ class _ClinicalListContentState extends State<ClinicalListContent> {
           ClinicalListFilters(
             searchController: _searchController,
             searchHint:
-                'Buscar por ${section.tableFields.take(2).join(' o ').toLowerCase()}',
+                'Buscar por ${section.tableFields.take(2).map(section.labelFor).join(' o ').toLowerCase()}',
             onSearch: (value) =>
                 setState(() => _search = value.trim().toLowerCase()),
             filter: _filter,
             onFilter: (value) => setState(() => _filter = value),
             category: _category,
             onCategory: (value) => setState(() => _category = value),
-            filterField: filterField,
+            filterField: filterField == null
+                ? null
+                : section.labelFor(filterField),
             categories: categories,
           ),
           const SizedBox(height: 12),
@@ -102,7 +103,7 @@ class _ClinicalListContentState extends State<ClinicalListContent> {
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
               Text(
-                '${matches.length} de ${section.examples.length} registros de ejemplo',
+                '${matches.length} de ${section.rows.length} registros de ejemplo',
               ),
               TextButton(
                 onPressed: () => setState(() {
@@ -135,7 +136,7 @@ class _ClinicalListContentState extends State<ClinicalListContent> {
                 if (box.maxWidth < 720)
                   const TableColumn(key: 'actions', label: 'Acciones'),
                 for (final field in section.tableFields)
-                  TableColumn(key: field, label: field),
+                  TableColumn(key: field, label: section.labelFor(field)),
                 const TableColumn(key: 'active', label: 'Activo / Inactivo'),
                 if (box.maxWidth >= 720)
                   const TableColumn(key: 'actions', label: 'Acciones'),

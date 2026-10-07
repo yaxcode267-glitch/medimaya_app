@@ -1,17 +1,23 @@
+import '../service/consultation_fields_demo_repository.dart';
 import '../../shared/model/clinical_section.dart';
 
-const consultationFieldsSection = ClinicalSection(
+final consultationFieldsSection = ClinicalSection(
   slug: "consultation-fields",
   title: "Campos de consulta",
   singular: "campo",
   description: "Campos reutilizables para construir formularios clínicos.",
-  tableFields: ['Etiqueta', 'Tipo', 'Obligatorio'],
-  filterField: 'Tipo',
+  tableFields: ['label', 'field_type', 'required'],
+  filterField: 'field_type',
   fields: [
-    ClinicalField("Disponibilidad", options: ["Activo", "Inactivo"]),
-    ClinicalField("Etiqueta", required: true),
+    ClinicalField(
+      "Disponibilidad",
+      key: "active",
+      options: ["Activo", "Inactivo"],
+    ),
+    ClinicalField("Etiqueta", key: "label", required: true),
     ClinicalField(
       "Tipo",
+      key: "field_type",
       options: [
         "Texto",
         "Texto largo",
@@ -22,25 +28,7 @@ const consultationFieldsSection = ClinicalSection(
         "Opción única",
       ],
     ),
-    ClinicalField("Obligatorio", options: ["Sí", "No"]),
+    ClinicalField("Obligatorio", key: "required", options: ["Sí", "No"]),
   ],
-  examples: [
-    {
-      "Disponibilidad": "Activo",
-      "Etiqueta": "Motivo de consulta",
-      "Tipo": "Texto largo",
-      "Obligatorio": "Sí",
-    },
-    {
-      "Disponibilidad": "Inactivo",
-      "Etiqueta": "Observaciones",
-      "Tipo": "Texto largo",
-      "Obligatorio": "No",
-    },
-  ],
+  repository: consultationFieldsRepository,
 );
-
-const consultationFieldExampleConfigs = <String, Map<String, Object?>>{
-  'demo-1': {'placeholder': 'Describe el motivo de la visita'},
-  'demo-2': {'placeholder': 'Anota las observaciones de la consulta'},
-};

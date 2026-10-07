@@ -12,7 +12,7 @@ class DocumentTypeDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final extensions = (document['Extensiones permitidas'] ?? '')
+    final extensions = (document['allowed_extensions'] ?? '')
         .split(',')
         .map((value) => value.trim().toLowerCase())
         .where((value) => value.isNotEmpty)
@@ -26,7 +26,7 @@ class DocumentTypeDetails extends StatelessWidget {
       documentExtensionGroups.values.expand((value) => value).toSet(),
     );
     if (others.isNotEmpty) groups['Otros formatos'] = others.toList();
-    final description = document['Descripción']?.trim() ?? '';
+    final description = document['description']?.trim() ?? '';
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -39,10 +39,7 @@ class DocumentTypeDetails extends StatelessWidget {
         const Divider(height: 32),
         const Text('Tamaño máximo por archivo', style: AppTextStyles.label),
         const SizedBox(height: 8),
-        Text(
-          '${document['Tamaño máximo (MB)'] ?? '—'} MB',
-          style: AppTextStyles.body,
-        ),
+        Text('${document['max_size_mb'] ?? '—'} MB', style: AppTextStyles.body),
         const Divider(height: 32),
         const Text('Formatos permitidos', style: AppTextStyles.label),
         const SizedBox(height: 8),

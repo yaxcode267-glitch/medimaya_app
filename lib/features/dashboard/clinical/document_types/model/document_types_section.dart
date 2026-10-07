@@ -1,31 +1,27 @@
+import '../service/document_types_demo_repository.dart';
 import '../../shared/model/clinical_section.dart';
 
-const documentTypesSection = ClinicalSection(
+final documentTypesSection = ClinicalSection(
   slug: "document-types",
   title: "Tipos de documento",
   singular: "tipo de documento",
   description: "Clasificación de los archivos del expediente clínico.",
-  tableFields: ['Nombre', 'Extensiones permitidas', 'Tamaño máximo (MB)'],
+  tableFields: ['name', 'allowed_extensions', 'max_size_mb'],
   fields: [
-    ClinicalField("Nombre", required: true),
-    ClinicalField("Descripción", multiline: true),
-    ClinicalField("Extensiones permitidas", required: true, multiline: true),
-    ClinicalField("Tamaño máximo (MB)", required: true),
-    ClinicalField("Disponibilidad", options: ["Activo", "Inactivo"]),
+    ClinicalField("Nombre", key: "name", required: true),
+    ClinicalField("Descripción", key: "description", multiline: true),
+    ClinicalField(
+      "Extensiones permitidas",
+      key: "allowed_extensions",
+      required: true,
+      multiline: true,
+    ),
+    ClinicalField("Tamaño máximo (MB)", key: "max_size_mb", required: true),
+    ClinicalField(
+      "Disponibilidad",
+      key: "active",
+      options: ["Activo", "Inactivo"],
+    ),
   ],
-  examples: [
-    {
-      "Nombre": "Laboratorio",
-      "Descripción": "Resultados de exámenes.",
-      "Extensiones permitidas": "pdf, jpg, png",
-      "Tamaño máximo (MB)": "10",
-      "Disponibilidad": "Activo",
-    },
-    {
-      "Nombre": "Imagen diagnóstica",
-      "Extensiones permitidas": "pdf, jpg, png",
-      "Tamaño máximo (MB)": "20",
-      "Disponibilidad": "Inactivo",
-    },
-  ],
+  repository: documentTypesRepository,
 );

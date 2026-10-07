@@ -1,3 +1,5 @@
+import '../../shared/widget/clinical_data_view.dart';
+
 import 'package:flutter/material.dart';
 
 import '../model/consultation_fields_section.dart';
@@ -11,14 +13,25 @@ class ConsultationFieldShowPage extends StatelessWidget {
   final String id;
 
   @override
-  Widget build(BuildContext context) => DashboardLayout(
+  Widget build(BuildContext context) => ClinicalDataView(
+    sections: [consultationFieldsSection],
+    builder: _buildLoaded,
+  );
+
+  Widget _buildLoaded(BuildContext context) => DashboardLayout(
     title: 'Detalle de ${consultationFieldsSection.singular}',
     child: ClinicalRecordContent(
       section: consultationFieldsSection,
       id: id,
       readOnly: true,
       structure: FieldConfigSummary(
-        config: consultationFieldExampleConfigs[id] ?? const {},
+        config:
+            consultationFieldsSection.records
+                    .where((record) => record.id == id)
+                    .firstOrNull
+                    ?.toJson()['config']
+                as Map<String, Object?>? ??
+            const {},
       ),
     ),
   );

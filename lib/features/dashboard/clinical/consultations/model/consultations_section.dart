@@ -1,37 +1,32 @@
+import '../service/consultations_demo_repository.dart';
 import '../../shared/model/clinical_section.dart';
 
-const consultationsSection = ClinicalSection(
+final consultationsSection = ClinicalSection(
   slug: "consultations",
   title: "Consultas",
   singular: "consulta",
   description: "Registro de atención y seguimiento del paciente.",
-  tableFields: ['Paciente', 'Formulario', 'Fecha de consulta', 'Estado'],
-  filterField: 'Estado',
+  tableFields: ['patient_name', 'form_name', 'consulted_at', 'status'],
+  filterField: 'status',
   fields: [
-    ClinicalField("Disponibilidad", options: ["Activo", "Inactivo"]),
-    ClinicalField("Paciente", multiline: true),
+    ClinicalField(
+      "Disponibilidad",
+      key: "active",
+      options: ["Activo", "Inactivo"],
+    ),
+    ClinicalField("Paciente", key: "patient_name", multiline: true),
     ClinicalField(
       "Formulario",
+      key: "form_name",
       options: ["Consulta general", "Control de seguimiento"],
     ),
-    ClinicalField("Fecha de consulta", date: true),
-    ClinicalField("Estado", options: ["Borrador", "Completada", "Cancelada"]),
-    ClinicalField("Notas", multiline: true),
+    ClinicalField("Fecha de consulta", key: "consulted_at", date: true),
+    ClinicalField(
+      "Estado",
+      key: "status",
+      options: ["Borrador", "Completada", "Cancelada"],
+    ),
+    ClinicalField("Notas", key: "notes", multiline: true),
   ],
-  examples: [
-    {
-      "Disponibilidad": "Activo",
-      "Paciente": "Paciente de ejemplo Demo",
-      "Formulario": "Consulta general",
-      "Fecha de consulta": "2026-10-06",
-      "Estado": "Borrador",
-    },
-    {
-      "Disponibilidad": "Inactivo",
-      "Paciente": "Segundo paciente Demo",
-      "Formulario": "Control de seguimiento",
-      "Fecha de consulta": "2026-10-05",
-      "Estado": "Completada",
-    },
-  ],
+  repository: consultationsRepository,
 );

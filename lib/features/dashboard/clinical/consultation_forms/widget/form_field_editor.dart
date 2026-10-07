@@ -93,7 +93,7 @@ class _FormFieldEditorState extends State<FormFieldEditor> {
         ? ConsultationFieldDefinition(
             id: widget.element?.field?.id ?? 'field-${widget.nextId}',
             label: widget.documentOnly
-                ? _documentType!['Nombre']!
+                ? _documentType!['name']!
                 : _label.text.trim(),
             fieldType: _type,
             required: _defaultRequired,

@@ -1,3 +1,5 @@
+import '../store/clinical_form_notifier.dart';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -24,7 +26,12 @@ class ClinicalRecordContent extends StatelessWidget {
   final ClinicalSection section;
   final String? id;
   final bool readOnly;
-  final Widget? Function(ClinicalField field, String? value)? fieldBuilder;
+  final Widget? Function(
+    ClinicalField field,
+    String? value,
+    ClinicalFormNotifier notifier,
+  )?
+  fieldBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -47,12 +54,12 @@ class ClinicalRecordContent extends StatelessWidget {
               readOnly
                   ? ClinicalRecordSummary(
                       section: section,
-                      values: section.examples[index],
+                      values: section.rows[index],
                     )
                   : ClinicalFields(
                       fields: section.fields,
                       fieldBuilder: fieldBuilder,
-                      values: index < 0 ? const {} : section.examples[index],
+                      values: index < 0 ? const {} : section.rows[index],
                       readOnly: readOnly,
                     ),
               const SizedBox(height: 24),

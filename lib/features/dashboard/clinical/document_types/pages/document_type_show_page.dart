@@ -1,3 +1,5 @@
+import '../../shared/widget/clinical_data_view.dart';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -17,11 +19,11 @@ class DocumentTypeShowPage extends StatelessWidget {
   final String id;
 
   @override
-  Widget build(BuildContext context) {
-    final index = List.generate(
-      documentTypesSection.examples.length,
-      (index) => 'demo-${index + 1}',
-    ).indexOf(id);
+  Widget build(BuildContext context) =>
+      ClinicalDataView(sections: [documentTypesSection], builder: _buildLoaded);
+
+  Widget _buildLoaded(BuildContext context) {
+    final index = documentTypesSection.indexOfId(id);
     return DashboardLayout(
       title: 'Detalle de tipo de documento',
       child: index < 0
@@ -38,7 +40,7 @@ class DocumentTypeShowPage extends StatelessWidget {
             )
           : DocumentTypeShowContent(
               id: id,
-              document: documentTypesSection.examples[index],
+              document: documentTypesSection.rows[index],
             ),
     );
   }
@@ -55,7 +57,7 @@ class DocumentTypeShowContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final active = document['Disponibilidad'] == 'Activo';
+    final active = document['active'] == 'Activo';
     return ListView(
       children: [
         const ClinicalNotice(),
@@ -75,7 +77,7 @@ class DocumentTypeShowContent extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  document['Nombre'] ?? '',
+                  document['name'] ?? '',
                   style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w700,

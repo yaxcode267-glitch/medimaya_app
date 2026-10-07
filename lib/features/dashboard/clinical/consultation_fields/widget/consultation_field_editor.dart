@@ -38,15 +38,15 @@ class _ConsultationFieldEditorState extends State<ConsultationFieldEditor> {
   @override
   void initState() {
     super.initState();
-    _label.text = widget.example['Etiqueta'] ?? '';
+    _label.text = widget.example['label'] ?? '';
     _type =
         consultationFieldTypes.entries
-            .where((entry) => entry.value == widget.example['Tipo'])
+            .where((entry) => entry.value == widget.example['field_type'])
             .firstOrNull
             ?.key ??
         'text';
-    _active = widget.example['Disponibilidad'] ?? 'Activo';
-    _required = widget.example['Obligatorio'] ?? 'No';
+    _active = widget.example['active'] ?? 'Activo';
+    _required = widget.example['required'] ?? 'No';
     _config.load(widget.config);
     for (final controller in [
       _label,

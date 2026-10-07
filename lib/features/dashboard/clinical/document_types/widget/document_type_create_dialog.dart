@@ -80,11 +80,11 @@ class _DocumentTypeCreateDialogState extends State<DocumentTypeCreateDialog> {
                     ? 'Selecciona al menos una extensión.'
                     : null,
                 onSaved: (value) => Navigator.pop(context, <String, String>{
-                  'Nombre': _name.text.trim(),
-                  'Descripción': _description.text.trim(),
-                  'Tamaño máximo (MB)': _size.text.trim(),
-                  'Extensiones permitidas': value!.join(', '),
-                  'Disponibilidad': 'Activo',
+                  'name': _name.text.trim(),
+                  'description': _description.text.trim(),
+                  'max_size_mb': _size.text.trim(),
+                  'allowed_extensions': value!.join(', '),
+                  'active': 'Activo',
                 }),
                 builder: (field) => Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

@@ -49,12 +49,3 @@ const consultationFieldTypes = {
   'radio': 'Opción única',
   'document': 'Documento',
 };
-
-const formFieldExamples = [
-  ConsultationFieldDefinition(
-    id: 'field-motive',
-    label: 'Motivo de consulta',
-    fieldType: 'textarea',
-    required: true,
-  ),
-];

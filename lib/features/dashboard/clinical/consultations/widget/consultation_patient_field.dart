@@ -1,3 +1,5 @@
+import '../../shared/store/clinical_form_notifier.dart';
+
 import 'package:flutter/material.dart';
 
 import '../../patients/model/patients_section.dart';
@@ -12,8 +14,13 @@ import 'package:medimaya_app/shared/ui/themes/app_colors.dart';
 import 'package:medimaya_app/shared/ui/widget/forms/input_form.dart';
 
 class ConsultationPatientField extends StatefulWidget {
-  const ConsultationPatientField({super.key, this.initialPatient});
+  const ConsultationPatientField({
+    super.key,
+    this.initialPatient,
+    this.onChanged,
+  });
   final String? initialPatient;
+  final ValueChanged<Map<String, String>>? onChanged;
 
   @override
   State<ConsultationPatientField> createState() =>
@@ -21,6 +28,7 @@ class ConsultationPatientField extends StatefulWidget {
 }
 
 class _ConsultationPatientFieldState extends State<ConsultationPatientField> {
+  final _newPatientForm = ClinicalFormNotifier({});
   final _id = TextEditingController();
   bool _newPatient = false;
   Map<String, String>? _patient;
@@ -29,27 +37,32 @@ class _ConsultationPatientFieldState extends State<ConsultationPatientField> {
   @override
   void initState() {
     super.initState();
-    for (final patient in patientsSection.examples) {
-      if ('${patient['Nombres']} ${patient['Apellidos']}' ==
+    _newPatientForm.addListener(_notifyNewPatient);
+    for (final patient in patientsSection.rows) {
+      if ('${patient['first_name']} ${patient['last_name']}' ==
           widget.initialPatient) {
         _patient = patient;
-        _id.text = patient['ID'] ?? '';
+        _id.text = patient['patient_code'] ?? '';
       }
     }
   }
 
   @override
   void dispose() {
+    _newPatientForm.dispose();
     _id.dispose();
     super.dispose();
   }
 
+  void _notifyNewPatient() => widget.onChanged?.call(_newPatientForm.values);
+
   void _assign() {
-    final matches = patientsSection.examples.where(
-      (patient) => patient['ID'] == _id.text.trim().toUpperCase(),
+    final matches = patientsSection.rows.where(
+      (patient) => patient['patient_code'] == _id.text.trim().toUpperCase(),
     );
     setState(() {
       _patient = matches.firstOrNull;
+      widget.onChanged?.call(_patient ?? {});
       _error = _patient == null
           ? 'No existe un paciente de ejemplo con ese ID.'
           : null;
@@ -91,7 +104,12 @@ class _ConsultationPatientFieldState extends State<ConsultationPatientField> {
             FilterOption(value: 'existing', label: 'Paciente existente'),
             FilterOption(value: 'new', label: 'Nuevo paciente'),
           ],
-          onChanged: (value) => setState(() => _newPatient = value == 'new'),
+          onChanged: (value) => setState(() {
+            _newPatient = value == 'new';
+            widget.onChanged?.call(
+              _newPatient ? _newPatientForm.values : (_patient ?? {}),
+            );
+          }),
         ),
       const SizedBox(height: 16),
       if (_newPatient) ...[
@@ -101,8 +119,9 @@ class _ConsultationPatientFieldState extends State<ConsultationPatientField> {
         ),
         const SizedBox(height: 16),
         ClinicalFields(
+          notifier: _newPatientForm,
           fields: patientsSection.fields
-              .where((field) => field.label != 'ID')
+              .where((field) => field.key != 'patient_code')
               .toList(),
           values: const {},
           readOnly: false,
@@ -115,6 +134,7 @@ class _ConsultationPatientFieldState extends State<ConsultationPatientField> {
           errorText: _error,
           onChanged: (_) => setState(() {
             _patient = null;
+            widget.onChanged?.call({});
             _error = null;
           }),
           onFieldSubmitted: (_) => _assign(),
@@ -152,13 +172,13 @@ class _ConsultationPatientFieldState extends State<ConsultationPatientField> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '${patient['Nombres']} ${patient['Apellidos']}',
+                  '${patient['first_name']} ${patient['last_name']}',
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                Text('ID: ${patient['ID']}'),
+                Text('ID: ${patient['patient_code']}'),
               ],
             ),
           ),

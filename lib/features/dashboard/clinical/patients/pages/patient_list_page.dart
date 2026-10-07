@@ -1,3 +1,5 @@
+import '../../shared/widget/clinical_data_view.dart';
+
 import 'package:flutter/material.dart';
 
 import '../model/patients_section.dart';
@@ -9,7 +11,10 @@ class PatientListPage extends StatelessWidget {
   const PatientListPage({super.key});
 
   @override
-  Widget build(BuildContext context) => DashboardLayout(
+  Widget build(BuildContext context) =>
+      ClinicalDataView(sections: [patientsSection], builder: _buildLoaded);
+
+  Widget _buildLoaded(BuildContext context) => DashboardLayout(
     title: patientsSection.title,
     child: ClinicalListContent(section: patientsSection, allowCreate: false),
   );

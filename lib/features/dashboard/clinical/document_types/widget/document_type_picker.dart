@@ -57,11 +57,11 @@ class _DocumentTypePickerState extends State<DocumentTypePicker> {
           value: widget.value ?? '',
           options: [
             for (final entry in documents.entries)
-              if (entry.value['Disponibilidad'] == 'Activo' ||
+              if (entry.value['active'] == 'Activo' ||
                   widget.value == entry.key)
                 SelectOption(
                   value: entry.key,
-                  label: entry.value['Nombre'] ?? '',
+                  label: entry.value['name'] ?? '',
                 ),
           ],
           onChanged: (id) => widget.onChanged(id, documents[id]!),

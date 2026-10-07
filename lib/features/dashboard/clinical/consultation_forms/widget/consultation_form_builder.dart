@@ -1,3 +1,6 @@
+import '../../consultation_fields/model/consultation_fields_section.dart';
+import '../../document_types/model/document_types_section.dart';
+
 import 'package:medimaya_app/shared/ui/themes/app_text_styles.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +24,7 @@ class ConsultationFormBuilder extends StatefulWidget {
 }
 
 class _ConsultationFormBuilderState extends State<ConsultationFormBuilder> {
-  final _catalog = [...formFieldExamples];
+  final List<ConsultationFieldDefinition> _catalog = [];
   final Map<String, Map<String, String>> _documentTypes = {};
   final List<ConsultationFormElement> _elements = [];
   int _sequence = 0;
@@ -30,6 +33,26 @@ class _ConsultationFormBuilderState extends State<ConsultationFormBuilder> {
   @override
   void initState() {
     super.initState();
+    _catalog.addAll(
+      consultationFieldsSection.records.where((record) => record.active).map((
+        record,
+      ) {
+        final values = record.toValues();
+        return ConsultationFieldDefinition(
+          id: record.id,
+          label: values['label']!,
+          fieldType: record.toJson()['field_type'] as String,
+          required: record.toJson()['required'] as bool,
+          config:
+              (record.toJson()['config'] as Map<String, Object?>?) ?? const {},
+        );
+      }),
+    );
+    _documentTypes.addEntries(
+      documentTypesSection.records.map(
+        (record) => MapEntry(record.id, record.toValues()),
+      ),
+    );
     if (widget.editing) {
       _elements.addAll([
         ConsultationFormElement(
@@ -40,7 +63,7 @@ class _ConsultationFormBuilderState extends State<ConsultationFormBuilder> {
         ConsultationFormElement(
           id: 'field-example',
           type: 'FIELD',
-          field: formFieldExamples.first,
+          field: _catalog.firstOrNull,
           parentId: 'group-evaluation',
         ),
       ]);
@@ -222,7 +245,10 @@ class _ConsultationFormBuilderState extends State<ConsultationFormBuilder> {
               bottom: 16,
             ),
             child: _preview
-                ? FormElementPreview(element: element)
+                ? FormElementPreview(
+                    element: element,
+                    documentTypes: _documentTypes,
+                  )
                 : FormElementCard(
                     element: element,
                     position: ordered.indexOf(element) + 1,

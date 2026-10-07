@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../document_types/model/document_types_section.dart';
 import '../../document_types/widget/document_type_picker.dart';
 
 import 'package:medimaya_app/shared/ui/widget/forms/input_form.dart';
@@ -80,11 +79,7 @@ class FieldConfigInputs extends StatelessWidget {
       ],
       if (type == 'document' && onDocumentTypeChanged != null)
         DocumentTypePicker(
-          documents: {
-            for (var i = 0; i < documentTypesSection.examples.length; i++)
-              'demo-${i + 1}': documentTypesSection.examples[i],
-            ...documentTypes,
-          },
+          documents: documentTypes,
           value: documentTypeId,
           selectedDocument: selectedDocument,
           onChanged: onDocumentTypeChanged!,

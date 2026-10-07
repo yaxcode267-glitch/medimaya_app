@@ -1,3 +1,5 @@
+import '../../shared/widget/clinical_data_view.dart';
+
 import 'package:flutter/material.dart';
 
 import '../model/document_types_section.dart';
@@ -9,7 +11,10 @@ class DocumentTypeListPage extends StatelessWidget {
   const DocumentTypeListPage({super.key});
 
   @override
-  Widget build(BuildContext context) => DashboardLayout(
+  Widget build(BuildContext context) =>
+      ClinicalDataView(sections: [documentTypesSection], builder: _buildLoaded);
+
+  Widget _buildLoaded(BuildContext context) => DashboardLayout(
     title: documentTypesSection.title,
     child: ClinicalListContent(section: documentTypesSection),
   );
