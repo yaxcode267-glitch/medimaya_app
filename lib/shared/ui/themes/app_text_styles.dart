@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// Themes
 import 'app_colors.dart';
 
 abstract final class AppTextStyles {
@@ -33,5 +34,19 @@ abstract final class AppTextStyles {
     fontWeight: FontWeight.w600,
     color: AppColors.colorTextoSecundario,
     height: 1.4,
+  );
+  static const supporting = TextStyle(
+    fontSize: 14,
+    height: 1.5,
+    color: AppColors.colorTextoSecundario,
+  );
+  static const caption = TextStyle(
+    fontSize: 13,
+    color: AppColors.colorTextoSecundario,
+  );
+  static const elementTitle = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.w600,
+    color: AppColors.colorTexto,
   );
 }
