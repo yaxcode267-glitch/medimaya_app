@@ -1,3 +1,5 @@
+import '../model/field_config_override.dart';
+
 import 'package:medimaya_app/shared/ui/themes/app_text_styles.dart';
 
 import '../../shared/store/field_config_controller.dart';
@@ -108,7 +110,7 @@ class _FormFieldEditorState extends State<FormFieldEditor> {
         requiredOverride: _required == 'inherit' ? null : _required == 'yes',
         documentTypeId: _type == 'document' ? _documentTypeId : null,
         documentType: _type == 'document' ? _documentType : null,
-        config: config,
+        config: fieldConfigOverride(config, field.config),
       ),
     );
   }
